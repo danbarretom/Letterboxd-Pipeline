@@ -1,0 +1,53 @@
+# ---------------------------------------------------------
+# AMBIENTE VIRTUAL E DEPENDÊNCIAS
+# ---------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+bin/
+lib/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+
+# ---------------------------------------------------------
+# CACHES E ARQUIVOS TEMPORÁRIOS DE PYTHON
+# ---------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------
+# ARQUIVOS DE CONFIGURAÇÃO E CHAVES DE API (SEGURANÇA!)
+# ---------------------------------------------------------
+.env
+*.env
+secrets.toml
+.streamlit/secrets.toml
+
+# ---------------------------------------------------------
+# DADOS (Evita enviar arquivos pesados para o GitHub)
+# ---------------------------------------------------------
+data/raw/*
+data/processed/*
+*.csv
+*.xlsx
+*.json
+
+# Exceção: Se quiser manter as pastas estruturadas no GitHub mesmo vazias
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ---------------------------------------------------------
+# SISTEMA OPERACIONAL
+# ---------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
