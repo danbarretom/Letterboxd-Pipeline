@@ -32,8 +32,8 @@ Durante o desenvolvimento da camada de raspagem de dados web utilizando **Playwr
 ### 1. Clonar o repositório
 
 ```bash
-git clone [https://github.com/SEU_USUARIO/tarantino-ai-analytics.git](https://github.com/SEU_USUARIO/tarantino-ai-analytics.git)
-cd tarantino-ai-analytics
+git clone https://github.com/danbarretom/Letterboxd-Pipeline.git
+cd Letterboxd-Pipeline
 ```
 
 ### 2. Instalar as dependências
@@ -47,9 +47,11 @@ pip install -r requirements.txt
 Crie um ficheiro `.env` na raiz do projeto:
 
 ```text
-DATABASE_URL=postgresql://postgres.[ID_DO_PROJETO]:[SENHA]@[aws-0-sa-east-1.pooler.supabase.com:6543/postgres](https://aws-0-sa-east-1.pooler.supabase.com:6543/postgres)
+DATABASE_URL=postgresql://postgres.[ID_DO_PROJETO]:[SENHA]@aws-0-sa-east-1.pooler.supabase.com:6543/postgres
 GEMINI_API_KEY=sua_chave_da_api_aqui
 ```
+
+> ⚠️ **Use sempre a string do Connection Pooler** (a que tem o host `aws-0-...pooler.supabase.com`), disponível em *Project Settings → Database → Connection Pooling* (modo Transaction). A string de conexão direta do Supabase (`db.[ID_DO_PROJETO].supabase.co`) só resolve por IPv6 e falha em redes sem suporte a IPv6.
 
 ### 4. Executar o fluxo em sequência
 
@@ -66,3 +68,12 @@ python src/ai_enrichment.py
 # 4. Levantar o Dashboard Web
 streamlit run src/dashboard.py
 ```
+
+O dashboard fica disponível em `http://localhost:8501`.
+
+## 🩹 Solução de Problemas
+
+- **Erro de conexão / host não resolve:** projetos gratuitos do Supabase pausam automaticamente após um período de inatividade. Acesse o painel do projeto e clique em **Restore/Resume** antes de rodar os scripts.
+- **`UnicodeEncodeError` ao rodar os scripts no Windows:** o terminal padrão (cp1252) não exibe os emojis dos prints. Rode antes: `set PYTHONIOENCODING=utf-8` (cmd) ou `$env:PYTHONIOENCODING="utf-8"` (PowerShell).
+- **`ai_enrichment.py` reporta erro 503 do Gemini:** é sobrecarga temporária da API. O script não marca a review como processada quando falha, então basta rodar `python src/ai_enrichment.py` novamente até aparecer "Nenhuma review pendente encontrada".
+- **`banco_seeder.py` roda mais de uma vez:** o script não verifica duplicidade, então cada execução insere as 9 reviews de novo. Rode apenas uma vez, ou limpe as tabelas (`TRUNCATE reviews_enriched, reviews_raw RESTART IDENTITY;`) antes de rodar de novo.
